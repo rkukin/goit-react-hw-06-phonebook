@@ -1,11 +1,13 @@
-import React, {Component} from "react";
-import {uuid} from 'uuidv4';
+import React, { Component } from "react";
+import { uuid } from 'uuidv4';
 import AddContactForm from "./AddContactForm";
 import ContactList from "./ContactList";
 import Filter from "./Filter";
 import ThemeSelector from "./ThemeSelector";
 import Container from "./Container";
 import withTheme from "../hoc/withTheme";
+import { connect } from 'react-redux';
+import * as phoneBookActions from '../redux/phoneBookActions';
 
 class App extends Component {
 
@@ -15,7 +17,7 @@ class App extends Component {
   };
 
   getFilteredContacts() {
-    const {contacts, filter} = this.state;
+    const { contacts, filter } = this.state;
     if (filter === "")
       return contacts;
     else
@@ -33,9 +35,9 @@ class App extends Component {
   };
 
   handleChange = e => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
-    this.setState({[name]: value});
+    this.setState({ [name]: value });
   };
 
   onAddContact = (name, number) => {
@@ -61,9 +63,9 @@ class App extends Component {
   };
 
   handleDelete = (contactId) => {
-    const {contacts} = this.state;
+    const { contacts } = this.state;
     const newContacts = contacts.filter(contact => contact.id !== contactId);
-    this.setState({contacts: newContacts});
+    this.setState({ contacts: newContacts });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -75,15 +77,28 @@ class App extends Component {
     return (
 
       <Container>
-        <ThemeSelector/>
+        <ThemeSelector />
         <h2>PhoneBook</h2>
-        <AddContactForm onAddContact={this.onAddContact}/>
+        <AddContactForm onAddContact={this.onAddContact} />
         <h3>Contacts</h3>
-        <Filter handleChange={this.handleChange}/>
-        <ContactList contacts={this.getFilteredContacts()} handleDelete={this.handleDelete}/>
+        <Filter handleChange={this.handleChange} />
+        <ContactList contacts={this.getFilteredContacts()} handleDelete={this.handleDelete} />
       </Container>
     )
   }
+};
+
+const mapStateToProps = state => {
+  return {
+    state: state.contacts
+  }
 }
 
-export default withTheme(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddContact: () => dispatch(phoneBookActions.addContact),
+    onDeleteContact: () => dispatch(phoneBookActions.deleteContact)
+  }
+}
+
+export default withTheme(connect(mapStateToProps, mapDispatchToProps)(App));
