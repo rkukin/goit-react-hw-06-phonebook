@@ -26,3 +26,10 @@ export const filterUpdated = (filter) => {
         payload: { filter }
     }
 };
+
+export const loadContacts = (contacts) => {
+    return {
+        type: Type.LOAD_CONTACTS,
+        payload:  {contacts}
+    }
+};

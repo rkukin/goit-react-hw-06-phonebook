@@ -55,13 +55,9 @@ class AddContactForm extends Component {
 
   render() {
 
-    // const {config} = this.props.theme;
     const config = this.props.theme.config[this.props.theme.type];
 
     return (
-
-      <>
-
         <ContactsForm themeProps={config} onSubmit={this.handleSubmit}>
           <InputLabel themeProps={config} htmlFor="name">Name</InputLabel>
           <FormInput themeProps={config} type="text" name="name" id="name" value={this.state.name} autoComplete='off'
@@ -74,7 +70,6 @@ class AddContactForm extends Component {
 
           <SubmitButton themeProps={config} type="submit">Add contact</SubmitButton>
         </ContactsForm>
-      </>
     )
   }
 };
