@@ -79,26 +79,27 @@ class App extends Component {
       <Container>
         <ThemeSelector />
         <h2>PhoneBook</h2>
-        <AddContactForm onAddContact={this.onAddContact} />
+        <AddContactForm onAddContact={this.props.onAddContact} />
         <h3>Contacts</h3>
         <Filter handleChange={this.handleChange} />
         <ContactList contacts={this.getFilteredContacts()} handleDelete={this.handleDelete} />
       </Container>
     )
   }
-};
+}
 
 const mapStateToProps = state => {
   return {
-    state: state.contacts
+    store: state.contacts
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onAddContact: () => dispatch(phoneBookActions.addContact),
-    onDeleteContact: () => dispatch(phoneBookActions.deleteContact)
+    onDeleteContact: () => dispatch(phoneBookActions.deleteContact),
+    filteredContacts: () => dispatch(phoneBookActions.filterContact),
   }
-}
+};
 
 export default withTheme(connect(mapStateToProps, mapDispatchToProps)(App));
