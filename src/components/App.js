@@ -11,13 +11,8 @@ import * as phoneBookActions from '../redux/phoneBookActions';
 
 class App extends Component {
 
-  state = {
-    contacts: [],
-    filter: ''
-  };
-
   getFilteredContacts() {
-    const { contacts, filter } = this.state;
+    const { contacts, filter } = this.props;
     if (filter === "")
       return contacts;
     else
@@ -35,43 +30,43 @@ class App extends Component {
   };
 
   handleChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
 
-    this.setState({ [name]: value });
+    this.props.filterUpdated(value);
   };
 
-  onAddContact = (name, number) => {
-    const contact = {
-      id: uuid(),
-      name: name,
-      number: number
-    };
+  // onAddContact = (name, number) => {
+  //   const contact = {
+  //     id: uuid(),
+  //     name: name,
+  //     number: number
+  //   };
+  //
+  //   if (name === "" || number === "") {
+  //     return alert("Please fill all fields!");
+  //   }
+  //
+  //   if (this.state.contacts.find(element => (element.name.toLowerCase() === name.toLowerCase()))) {
+  //     return alert("This contact already added!")
+  //   }
+  //
+  //   this.setState(prevState => {
+  //     return {
+  //       contacts: [...prevState.contacts, contact]
+  //     }
+  //   })
+  // };
 
-    if (name === "" || number === "") {
-      return alert("Please fill all fields!");
-    }
+  // handleDelete = (contactId) => {
+  //   const { contacts } = this.state;
+  //   const newContacts = contacts.filter(contact => contact.id !== contactId);
+  //   this.setState({ contacts: newContacts });
+  // };
 
-    if (this.state.contacts.find(element => (element.name.toLowerCase() === name.toLowerCase()))) {
-      return alert("This contact already added!")
-    }
-
-    this.setState(prevState => {
-      return {
-        contacts: [...prevState.contacts, contact]
-      }
-    })
-  };
-
-  handleDelete = (contactId) => {
-    const { contacts } = this.state;
-    const newContacts = contacts.filter(contact => contact.id !== contactId);
-    this.setState({ contacts: newContacts });
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.contacts !== this.state.contacts)
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-  };
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevState.contacts !== this.props.contacts)
+  //     localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+  // };
 
   render() {
     return (
@@ -82,7 +77,7 @@ class App extends Component {
         <AddContactForm onAddContact={this.props.onAddContact} />
         <h3>Contacts</h3>
         <Filter handleChange={this.handleChange} />
-        <ContactList contacts={this.getFilteredContacts()} handleDelete={this.handleDelete} />
+        <ContactList contacts={this.getFilteredContacts()} handleDelete={this.props.onDeleteContact} />
       </Container>
     )
   }
@@ -90,15 +85,16 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    store: state.contacts
+    contacts: state.contacts.contacts,
+    filter: state.contacts.filter
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddContact: () => dispatch(phoneBookActions.addContact),
-    onDeleteContact: () => dispatch(phoneBookActions.deleteContact),
-    filteredContacts: () => dispatch(phoneBookActions.filterContact),
+    onAddContact: (name, number) => dispatch(phoneBookActions.addContact(name, number)),
+    onDeleteContact: (id) => dispatch(phoneBookActions.deleteContact(id)),
+    filterUpdated: (filter) => dispatch(phoneBookActions.filterUpdated(filter)),
   }
 };
 

@@ -20,7 +20,7 @@ export const deleteContact = (id) => {
     }
 };
 
-export const filterContact = (filter) => {
+export const filterUpdated = (filter) => {
     return {
         type: Type.UPDATE_FILTER,
         payload: { filter }

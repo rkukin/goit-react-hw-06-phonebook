@@ -8,18 +8,20 @@ const initStore = {
 const phoneBookReducer = (store = initStore, action) => {
     switch (action.type) {
         case Type.ADD_CONTACT:
-            console.log(action.payload)
             return {
-                // contacts: [...store.contacts, action.payload.contact]
+                ...store,
+                contacts: [...store.contacts, action.payload]
             };
 
         case Type.DELETE_CONTACT:
             return {
-                contacts: [store.contacts.filter(contact => contact.id !== action.payload.id)]
+                ...store,
+                contacts: store.contacts.filter(contact => contact.id !== action.payload.id)
             };
 
         case Type.UPDATE_FILTER:
             return {
+                ...store,
                 filter: action.payload.filter
             };
 
