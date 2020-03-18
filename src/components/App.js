@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { uuid } from 'uuidv4';
 import AddContactForm from "./AddContactForm";
 import ContactList from "./ContactList";
 import Filter from "./Filter";
@@ -18,16 +17,16 @@ class App extends Component {
     else
       return contacts.filter(contact => contact.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
   }
-
-  componentDidMount() {
-    const storedContacts = localStorage.getItem('contacts');
-
-    if (storedContacts) {
-      this.setState({
-        contacts: JSON.parse(storedContacts)
-      });
-    }
-  };
+  //
+  // componentDidMount() {
+  //   const storedContacts = localStorage.getItem('contacts');
+  //
+  //   if (storedContacts) {
+  //     this.props({
+  //       contacts: JSON.parse(storedContacts)
+  //     });
+  //   }
+  // };
 
   handleChange = e => {
     const { value } = e.target;
@@ -36,11 +35,6 @@ class App extends Component {
   };
 
   // onAddContact = (name, number) => {
-  //   const contact = {
-  //     id: uuid(),
-  //     name: name,
-  //     number: number
-  //   };
   //
   //   if (name === "" || number === "") {
   //     return alert("Please fill all fields!");
@@ -50,25 +44,17 @@ class App extends Component {
   //     return alert("This contact already added!")
   //   }
   //
-  //   this.setState(prevState => {
-  //     return {
-  //       contacts: [...prevState.contacts, contact]
-  //     }
+  //   return this.props.
   //   })
   // };
 
-  // handleDelete = (contactId) => {
-  //   const { contacts } = this.state;
-  //   const newContacts = contacts.filter(contact => contact.id !== contactId);
-  //   this.setState({ contacts: newContacts });
-  // };
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevState.contacts !== this.props.contacts)
-  //     localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-  // };
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.contacts !== this.props.contacts)
+      localStorage.setItem("contacts", JSON.stringify(this.props.contacts));
+  };
 
   render() {
+    console.log(this.props.contacts);
     return (
 
       <Container>
@@ -84,11 +70,12 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
+  const { contacts, filter } = state.contacts;
   return {
-    contacts: state.contacts.contacts,
-    filter: state.contacts.filter
+    contacts: contacts,
+    filter: filter
   }
-}
+};
 
 const mapDispatchToProps = dispatch => {
   return {
