@@ -3,16 +3,18 @@ import {createReducer} from '@reduxjs/toolkit';
 import {addContact, deleteContact, filterUpdated, loadContacts} from './phoneBookActions';
 
 const initStore = {
-  contacts: [],
+  contacts: [{id:'23131', name:"test", number: '312321'}],
   filter: ''
 };
 
 export const phoneBookReducer = createReducer(initStore, {
-  [addContact]: (state, action) => {
+  [addContact]: (state, action) =>
+  {
     const {payload} = action;
     return {
       ...state,
-      contacts: [...state.contacts, payload]
+      contacts:
+    [...state.contacts, payload]
     }
   },
 

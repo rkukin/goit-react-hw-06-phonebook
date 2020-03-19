@@ -58,7 +58,7 @@ class App extends Component {
         <AddContactForm onAddContact={this.onAddValidContact} />
         <h3>Contacts</h3>
         <Filter handleChange={this.handleChange} />
-        {/*<ContactList contacts={this.getFilteredContacts()} handleDelete={this.props.onDeleteContact} />*/}
+        <ContactList contacts={this.getFilteredContacts()} handleDelete={this.props.onDeleteContact} />
       </Container>
     )
   }
