@@ -3,7 +3,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {addContact, deleteContact, filterUpdated, loadContacts} from './phoneBookActions';
 
 const initStore = {
-  contacts: [{id:'23131', name:"test", number: '312321'}],
+  contacts: [],
   filter: ''
 };
 
@@ -22,15 +22,15 @@ export const phoneBookReducer = createReducer(initStore, {
     const {payload} = action;
     return {
       ...state,
-      contacts: state.contacts.filter(contact => contact.id !== payload.id)
-    };
+        contacts: state.contacts.filter(contact => contact.id !== payload)
+    }
   },
 
   [filterUpdated]: (state, action) => {
     const {payload} = action;
     return {
       ...state,
-      filter: payload.filter
+      filter: payload
     };
   },
 
@@ -38,7 +38,7 @@ export const phoneBookReducer = createReducer(initStore, {
     const {payload} = action;
     return {
       ...state,
-      contacts: JSON.parse(payload.contacts)
+      contacts: JSON.parse(payload)
     };
   }
 });
