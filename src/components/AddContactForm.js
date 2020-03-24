@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import withTheme from "../hoc/withTheme"
+import withTheme from "../hoc/withTheme";
+import { connect } from 'react-redux';
+import * as phoneBookActions from '../redux/phoneBookActions';
 
 const ContactsForm = styled.form`
 border: 2px solid ${props => props.themeProps.fontColor};
@@ -40,6 +42,19 @@ class AddContactForm extends Component {
     number: ''
   };
 
+  onAddValidContact = (name, number) => {
+
+    if (name === "" || number === "") {
+      return alert("Please fill all fields!");
+    }
+
+    if (this.props.contacts.find(element => (element.name.toLowerCase() === name.toLowerCase()))) {
+      return alert("This contact already added!")
+    }
+
+    this.props.onAddContact(name, number);
+  };
+
   handleChange = e => {
     const {name, value} = e.target;
 
@@ -49,7 +64,7 @@ class AddContactForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    this.props.onAddContact(this.state.name, this.state.number);
+    this.onAddValidContact(this.state.name, this.state.number);
     this.setState({name: '', number: ''});
   };
 
@@ -78,4 +93,12 @@ AddContactForm.propTypes = {
   onAddContact: PropTypes.func.isRequired
 };
 
-export default withTheme(AddContactForm)
+const mapStateToProps = state => {
+  return {contacts: state.contacts.items}
+};
+
+const mapDispatchToProps = {
+    onAddContact: (name, number) => phoneBookActions.addContact(name, number)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(AddContactForm))

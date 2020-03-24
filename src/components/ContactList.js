@@ -11,8 +11,8 @@ flex-direction: column;
 `;
 
 function ContactList({contacts, handleDelete}) {
-
   return (
+
     <List>
       {contacts.map(contact => {
         return <ContactListItem key={contact.id} contact={contact} handleDelete={handleDelete}/>

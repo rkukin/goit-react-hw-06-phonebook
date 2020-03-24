@@ -31,19 +31,6 @@ class App extends Component {
     this.props.filterUpdated(value);
   };
 
-  onAddValidContact = (name, number) => {
-
-    if (name === "" || number === "") {
-      return alert("Please fill all fields!");
-    }
-
-    if (this.props.contacts.find(element => (element.name.toLowerCase() === name.toLowerCase()))) {
-      return alert("This contact already added!")
-    }
-
-    this.props.onAddContact(name, number);
-  };
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.contacts !== this.props.contacts)
       localStorage.setItem("contacts", JSON.stringify(this.props.contacts));
@@ -55,7 +42,7 @@ class App extends Component {
       <Container>
         <ThemeSelector />
         <h2>PhoneBook</h2>
-        <AddContactForm onAddContact={this.onAddValidContact} />
+        <AddContactForm/>
         <h3>Contacts</h3>
         <Filter handleChange={this.handleChange} />
         <ContactList contacts={this.getFilteredContacts()} handleDelete={this.props.onDeleteContact} />
@@ -65,16 +52,14 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const { contacts, filter } = state.contacts;
   return {
-    contacts: contacts,
-    filter: filter
+    contacts: state.contacts.items,
+    filter: state.contacts.filter
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddContact: (name, number) => dispatch(phoneBookActions.addContact(name, number)),
     onDeleteContact: (id) => dispatch(phoneBookActions.deleteContact(id)),
     filterUpdated: (filter) => dispatch(phoneBookActions.filterUpdated(filter)),
     loadContacts: (contacts) => dispatch(phoneBookActions.loadContacts(contacts)),

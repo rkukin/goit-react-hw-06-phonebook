@@ -1,46 +1,34 @@
 // import {Type} from './actionTypes';
-import {createReducer} from '@reduxjs/toolkit';
+import {combineReducers, createReducer} from '@reduxjs/toolkit';
 import {addContact, deleteContact, filterUpdated, loadContacts} from './phoneBookActions';
 
-const initStore = {
-  contacts: [],
-  filter: ''
-};
+const items = createReducer([], {
+  [addContact]: (state, action) => {
+    return [...state, action.payload]
 
-export const phoneBookReducer = createReducer(initStore, {
-  [addContact]: (state, action) =>
-  {
-    const {payload} = action;
-    return {
-      ...state,
-      contacts:
-    [...state.contacts, payload]
-    }
   },
 
   [deleteContact]: (state, action) => {
-    const {payload} = action;
-    return {
-      ...state,
-        contacts: state.contacts.filter(contact => contact.id !== payload)
-    }
-  },
-
-  [filterUpdated]: (state, action) => {
-    const {payload} = action;
-    return {
-      ...state,
-      filter: payload
-    };
+    return [
+      ...state.filter(contact => contact.id !== action.payload)
+    ]
   },
 
   [loadContacts]: (state, action) => {
-    const {payload} = action;
-    return {
-      ...state,
-      contacts: JSON.parse(payload)
-    };
+    return JSON.parse(action.payload);
   }
+});
+
+const filter = createReducer('', {
+
+  [filterUpdated]: (state, action) => {
+    return action.payload;
+  },
+});
+
+export default combineReducers({
+  items,
+  filter
 });
 
 
