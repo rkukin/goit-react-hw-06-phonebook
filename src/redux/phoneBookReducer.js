@@ -5,7 +5,6 @@ import {addContact, deleteContact, filterUpdated, loadContacts} from './phoneBoo
 const items = createReducer([], {
   [addContact]: (state, action) => {
     return [...state, action.payload]
-
   },
 
   [deleteContact]: (state, action) => {

@@ -1,8 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types"
+import React, {Component} from "react";
 import styled from "styled-components";
 import ContactListItem from "./ContactListItem";
-import withTheme from "../hoc/withTheme"
+import withTheme from "../hoc/withTheme";
+import {connect} from 'react-redux';
+import * as phoneBookActions from '../redux/phoneBookActions';
 
 const List = styled.ul`
 max-width: 400px;
@@ -10,20 +11,41 @@ display: flex;
 flex-direction: column;
 `;
 
-function ContactList({contacts, handleDelete}) {
-  return (
+class ContactList extends Component {
 
-    <List>
-      {contacts.map(contact => {
-        return <ContactListItem key={contact.id} contact={contact} handleDelete={handleDelete}/>
-      })}
-    </List>
-  )
+  getFilteredContacts() {
+    const { contacts, filter } = this.props;
+    if (filter === "")
+      return contacts;
+    else
+      return contacts.filter(contact => contact.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
+  }
+
+  render() {
+
+    const filteredContacts = this.getFilteredContacts();
+
+    return (
+      <List>
+        {filteredContacts.map(contact => {
+          return <ContactListItem key={contact.id} contact={contact} handleDelete={this.props.onDeleteContact}/>
+        })}
+      </List>
+    )
+  }
 }
 
-ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  handleDelete: PropTypes.func.isRequired
+const mapStateToProps = state => {
+  return {
+    contacts: state.contacts.items,
+    filter: state.contacts.filter
+  }
 };
 
-export default withTheme(ContactList)
+const mapDispatchToProps = dispatch => {
+  return {
+    onDeleteContact: (id) => dispatch(phoneBookActions.deleteContact(id)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ContactList));

@@ -6,7 +6,6 @@ import withTheme from "../hoc/withTheme";
 const ListItem = styled.li`
 margin-right: 30px;
 min-width: 50%;
-
 `;
 
 const DeleteButton = styled.button`

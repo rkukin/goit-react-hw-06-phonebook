@@ -1,7 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types"
+import React, {Component} from "react";
 import styled from "styled-components";
 import withTheme from "../hoc/withTheme";
+import {connect} from 'react-redux';
+import * as phoneBookActions from '../redux/phoneBookActions';
 
 const FilterInput = styled.input`
 max-width: 40%;
@@ -11,15 +12,23 @@ color: ${props => props.themeProps.fontColor};
 background-color: ${props => props.themeProps.bodybg};
 `;
 
-function Filter({handleChange, theme}) {
+class Filter extends Component {
+  handleChange = e => {
+    const {value} = e.target;
 
-  return (
-    <FilterInput themeProps={theme.config[theme.type]} type="text" onChange={handleChange} name="filter" autoComplete='off'/>
-  )
+    this.props.filterUpdated(value);
+  };
+
+  render() {
+    return (
+      <FilterInput themeProps={this.props.theme.config[this.props.theme.type]} type="text" onChange={this.handleChange}
+                   name="filter" autoComplete='off'/>
+    )
+  }
 }
 
-Filter.propTypes = {
-  handleChange: PropTypes.func.isRequired
+const mapDispatchToProps = {
+  filterUpdated: (filter) => phoneBookActions.filterUpdated(filter),
 };
 
-export default withTheme(Filter);
+export default connect(null, mapDispatchToProps)(withTheme(Filter));
